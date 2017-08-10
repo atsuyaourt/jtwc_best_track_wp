@@ -16,6 +16,4 @@ out_df['Cat'] = out_df.VMax.apply(knots_to_cat) # Create category column
 out_df =  out_df.drop_duplicates() # Get unique rows
 out_df = out_df.sort_values(['SN', 'Year', 'Month', 'Day', 'Hour', 'CY'])
 
-out_df[['CY', 'Year', 'Month', 'Day', 'Hour', 'Lat', 'Lon', 'VMax', 'MSLP']]
-
 out_df.to_csv(out_file, index=False)
