@@ -9,9 +9,9 @@ def knots_to_cat(wind_speed):
     cat (str) -- TC category
     """
     cat = ''
-    if wind_speed < 20:
+    if wind_speed < 15:
         cat = ''
-    elif wind_speed <= 34:
+    elif wind_speed <= 33:
         cat = 'TD'
     elif wind_speed <= 63:
         cat = 'TS'
@@ -19,9 +19,9 @@ def knots_to_cat(wind_speed):
         cat = 'Cat1'
     elif wind_speed <= 95:
         cat = 'Cat2'
-    elif wind_speed <= 113:
+    elif wind_speed <= 112:
         cat = 'Cat3'
-    elif wind_speed <= 135:
+    elif wind_speed <= 136:
         cat = 'Cat4'
     else:
         cat = 'Cat5'
