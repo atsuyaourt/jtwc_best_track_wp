@@ -1,6 +1,6 @@
 # JTWC Western North Pacific Best Track Data
 
-Information about the data can be found [here](http://www.usno.navy.mil/NOOC/nmfc-ph/RSS/jtwc/best_tracks/wpindex.php)
+Information about the data can be found [here](https://metoc.ndbc.noaa.gov/ja/web/guest/jtwc/best_tracks/western-pacific)
 
 **Columns extracted:** 
   * *CY* - Annual cyclone number
