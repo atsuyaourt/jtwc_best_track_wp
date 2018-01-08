@@ -4,11 +4,16 @@ from glob import glob
 from StringIO import StringIO
 import pandas as pd
 
-ORIG_FILE = 'JTWC_raw.csv'
+IN_FILE = 'JTWC_raw.csv'
 BAK_FILE = 'JTWC_raw.csv.bak'
 IN_DIR = 'raw/'
 
-COL_NAMES = ['BASIN', 'CY', 'YYYYMMDDHH', 'TECHNUM', 'TECH', 'TAU', 'LAT', 'LON', 'VMAX', 'MSLP', 'TY', 'RAD', 'WINDCODE', 'RAD1', 'RAD2', 'RAD3', 'RAD4', 'RADP', 'RRP', 'MRD', 'GUSTS', 'EYE', 'SUBREGION', 'MAXSEAS', 'INITIALS', 'DIR', 'SPEED', 'STORMNAME', 'DEPTH', 'SEAS', 'SEASCODE', 'SEAS1', 'SEAS2', 'SEAS3', 'SEAS4']
+COL_NAMES = [
+    'BASIN', 'CY', 'YYYYMMDDHH', 'TECHNUM', 'TECH', 'TAU', 'LAT', 'LON',
+    'VMAX', 'MSLP', 'TY', 'RAD', 'WINDCODE', 'RAD1', 'RAD2', 'RAD3', 'RAD4',
+    'RADP', 'RRP', 'MRD', 'GUSTS', 'EYE', 'SUBREGION', 'MAXSEAS', 'INITIALS',
+    'DIR', 'SPEED', 'STORMNAME', 'DEPTH', 'SEAS', 'SEASCODE', 'SEAS1', 'SEAS2',
+    'SEAS3', 'SEAS4']
 
 
 def coord_str_to_num(coord_str):
@@ -46,7 +51,7 @@ def parse_input(filepath_or_buffer):
     """
     _df = pd.read_csv(filepath_or_buffer, header=None, names=COL_NAMES)
     _df = _df.loc[_df['BASIN'] == 'WP']
-    _df.drop(_df.columns[[0,3,4,5]], axis=1, inplace=True)
+    _df.drop(_df.columns[[0, 3, 4, 5]], axis=1, inplace=True)
     _df['YYYYMMDDHH'] = pd.to_datetime(_df['YYYYMMDDHH'], format='%Y%m%d%H')
 
     _df2 = pd.DataFrame(_df['CY'])
@@ -76,5 +81,5 @@ for zfile in zip_files:
 
 out_df = df.sort_values(['YY', 'MM', 'DD', 'HH', 'CY'])
 
-shutil.copyfile(ORIG_FILE, BAK_FILE) # Backup the file
+shutil.copyfile(IN_FILE, BAK_FILE)  # Backup the file
 out_df.to_csv(IN_FILE, mode='a', index=False, header=False)
