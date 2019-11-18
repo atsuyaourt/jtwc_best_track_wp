@@ -2,13 +2,12 @@ from pathlib import Path
 from re import findall
 from shutil import copyfile
 from zipfile import ZipFile
-from glob import glob
 from io import StringIO
 import pandas as pd
 
-IN_FILE = 'input/JTWC_raw.csv'
-BAK_FILE = 'output/JTWC_raw.csv.bak'
-IN_DIR = 'input/raw/'
+OUT_FILE = Path('output/JTWC_raw.csv')
+BAK_FILE = Path('output/JTWC_raw.csv.bak')
+IN_DIR = Path('input/raw/')
 
 COL_NAMES = [
     'BASIN', 'CY', 'YYYYMMDDHH', 'TECHNUM', 'TECH', 'TAU', 'LAT', 'LON',
@@ -70,12 +69,11 @@ def parse_input(filepath_or_buffer):
     return _out_df
 
 
-zip_files = glob(IN_DIR + '*.zip')
-zip_files = pd.DataFrame(zip_files, index=[int(findall('[0-9]{4}',z)[0]) for z in zip_files], columns=['name'])
+zip_files = list(IN_DIR.glob('*.zip'))
+zip_files = pd.DataFrame(zip_files, index=[int(findall('[0-9]{4}',z.as_posix())[0]) for z in zip_files], columns=['name']).sort_index()
 
-in_file = Path(IN_FILE)
-if in_file.exists():
-    in_df = pd.read_csv(in_file)
+if OUT_FILE.exists():
+    in_df = pd.read_csv(OUT_FILE)
     zip_files = zip_files[~zip_files.index.isin(in_df['YYYY'])]
 else:
     in_df = pd.DataFrame()
@@ -91,8 +89,8 @@ for zfile in zip_files['name']:
 
 out_df = df.sort_values(['YYYY', 'MM', 'DD', 'HH', 'CY'])
 
-if in_file.exists():
-    copyfile(IN_FILE, BAK_FILE)  # Backup the file
-    out_df.to_csv(IN_FILE, mode='a', index=False, header=False)
+if OUT_FILE.exists():
+    copyfile(OUT_FILE, BAK_FILE)  # Backup the file
+    out_df.to_csv(OUT_FILE, mode='a', index=False, header=False)
 else:
-    out_df.to_csv(IN_FILE, index=False)
+    out_df.to_csv(OUT_FILE, index=False)
