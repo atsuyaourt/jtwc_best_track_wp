@@ -4,23 +4,34 @@ import pandas as pd
 
 from helper.utils import knots_to_cat
 
-IN_FILE = Path('output/JTWC_raw.csv')
-OUT_FILE = Path('output/JTWC.csv')
+IN_FILE = Path("output/JTWC_raw.csv")
+OUT_FILE = Path("output/JTWC.csv")
 
-df = pd.read_csv(IN_FILE)
+df = pd.read_csv(
+    IN_FILE, usecols=["CY", "YYYY", "MM", "DD", "HH", "LAT", "LON", "VMAX", "MSLP"]
+)
 
-out_df = df.iloc[:, 0:9]  # get first 9 columns
-out_df.columns = [
-    'CY', 'Year', 'Month',
-    'Day', 'Hour', 'Lat',
-    'Lon', 'VMax', 'MSLP']  # rename columns
-tc_id = out_df.apply(
-    lambda r: "{}{:02d}".format(int(r['Year']), int(r['CY'])), axis=1)  # Serial Number column
-out_df = pd.concat([tc_id, out_df], axis=1)
-out_df.rename(columns={0: 'SN'}, inplace=True)
-out_df['Cat'] = out_df['VMax'].apply(knots_to_cat)  # Create category column
-out_df = out_df.drop_duplicates(subset=['CY', 'Year', 'Month', 'Day', 'Hour'])  # Get unique rows
-out_df = out_df.sort_values(['SN', 'Year', 'Month', 'Day', 'Hour', 'CY'])
+out_df = df.rename(
+    columns={
+        "YYYY": "Year",
+        "MM": "Month",
+        "DD": "Day",
+        "HH": "Hour",
+        "LAT": "Lat",
+        "LON": "Lon",
+        "VMAX": "VMax",
+    }
+)
 
-copyfile(OUT_FILE, OUT_FILE.with_suffix('.csv.bak') )  # Backup the file
+# Serial Number column
+out_df["SN"] = out_df["Year"].map(str) + out_df["CY"].map(str).str.pad(
+    width=2, side="left", fillchar="0"
+)
+# Create category column
+out_df["Cat"] = out_df["VMax"].apply(knots_to_cat)
+# Get unique rows
+out_df = out_df.drop_duplicates(subset=["CY", "Year", "Month", "Day", "Hour"])
+out_df = out_df.sort_values(["SN", "Year", "Month", "Day", "Hour", "CY"])
+
+copyfile(OUT_FILE, OUT_FILE.with_suffix(".csv.bak"))  # Backup the file
 out_df.to_csv(OUT_FILE, index=False)
