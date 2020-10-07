@@ -7,7 +7,7 @@ import pandas as pd
 
 OUT_FILE = Path("output/JTWC_raw.csv")
 BAK_FILE = Path("output/JTWC_raw.csv.bak")
-IN_DIR = Path("input/raw/")
+IN_DIR = Path("input/update")
 
 COL_NAMES = [
     "BASIN",
@@ -109,23 +109,23 @@ zip_files = pd.DataFrame(
 
 if OUT_FILE.exists():
     in_df = pd.read_csv(OUT_FILE)
-    zip_files = zip_files[~zip_files.index.isin(in_df["YYYY"])]
 else:
     in_df = pd.DataFrame()
 
-df = None
+new_df = []
 for zfile in zip_files["name"]:
     with ZipFile(zfile) as z:
         for f in z.namelist():
             ff = StringIO(z.read(f).decode("utf-8").replace(" ", ""))
-            if df is None:
-                df = parse_input(ff)
-            df = pd.concat([df, parse_input(ff)])
+            new_df.append(parse_input(ff))
 
-out_df = df.sort_values(["YYYY", "MM", "DD", "HH", "CY"])
+new_df = pd.concat(new_df, sort=False, ignore_index=True)
+
+new_df = new_df.sort_values(["YYYY", "MM", "DD", "HH", "CY"])
+
+out_df = pd.concat([in_df, new_df], sort=False, ignore_index=True)
 
 if OUT_FILE.exists():
     copyfile(OUT_FILE, BAK_FILE)  # Backup the file
-    out_df.to_csv(OUT_FILE, mode="a", index=False, header=False)
-else:
-    out_df.to_csv(OUT_FILE, index=False)
+
+out_df.to_csv(OUT_FILE, index=False)  # Save
