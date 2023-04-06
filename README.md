@@ -2,6 +2,8 @@
 
 Information about the data can be found [here](https://www.metoc.navy.mil/jtwc/jtwc.html?western-pacific)
 
+Period: 1945 - 2021
+
 **Columns extracted:**
 
 - _CY_ - Annual cyclone number
