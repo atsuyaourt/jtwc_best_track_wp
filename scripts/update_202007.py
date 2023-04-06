@@ -49,7 +49,7 @@ COL_NAMES = [
 
 
 def coord_str_to_num(coord_str):
-    """ Convert a string coordinate to float
+    """Convert a string coordinate to float
 
     Params:
     -------
@@ -69,7 +69,7 @@ def coord_str_to_num(coord_str):
 
 
 def parse_input(filepath_or_buffer):
-    """ Parse the input into a DataFrame
+    """Parse the input into a DataFrame
 
     Params:
     -------
@@ -109,7 +109,9 @@ update_years = [2016, 2017, 2018]
 zip_files = IN_DIR.glob("*.zip")
 zip_files = [z for z in zip_files if extract_year(z) in update_years]
 zip_files = pd.DataFrame(
-    zip_files, index=[extract_year(z) for z in zip_files], columns=["name"],
+    zip_files,
+    index=[extract_year(z) for z in zip_files],
+    columns=["name"],
 ).sort_index()
 
 if OUT_FILE.exists():

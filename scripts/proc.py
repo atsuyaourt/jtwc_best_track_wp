@@ -1,14 +1,14 @@
 from pathlib import Path
 from shutil import copyfile
-import pandas as pd
 
+import pandas as pd
 from helper.utils import knots_to_cat
 
-IN_FILE = Path("output/JTWC_raw.csv")
+IN_FILE = Path("output/JTWC_raw.parquet")
 OUT_FILE = Path("output/JTWC.csv")
 
-df = pd.read_csv(
-    IN_FILE, usecols=["CY", "YYYY", "MM", "DD", "HH", "LAT", "LON", "VMAX", "MSLP"]
+df = pd.read_parquet(
+    IN_FILE, columns=["CY", "YYYY", "MM", "DD", "HH", "LAT", "LON", "VMAX", "MSLP"]
 )
 
 out_df = df.rename(
