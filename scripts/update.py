@@ -47,12 +47,15 @@ def parse_input(filepath_or_buffer):
     out_df: pd.DataFrame
     The output dataframe
     """
+    col_names = [i for i in range(40)]
     _df = pd.read_csv(
         filepath_or_buffer,
         header=None,
-        names=COL_NAMES,
-        usecols=[i for i in range(len(COL_NAMES))],
+        names=col_names,
     )
+    ncols = len(COL_NAMES)-1
+    _df = _df.loc[:, :ncols]
+    _df.columns = COL_NAMES
     _df = _df.loc[_df["BASIN"] == "WP"]
     _df.drop(_df.columns[[0, 3, 4, 5]], axis=1, inplace=True)
     _df["YYYYMMDDHH"] = pd.to_datetime(_df["YYYYMMDDHH"], format="%Y%m%d%H")
